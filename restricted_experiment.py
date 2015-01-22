@@ -16,7 +16,22 @@ class RestrictedExperiment(EpisodicExperiment):
 
 	def _oneInteraction(self):
 		check legality, by looking into environment, it can call right to is legal, bypassing performAction.  If it's not, get a new action, and repeat. THEN call to episdoic
-		if self.task.isLegal(self.task.env, (int(action[0])/3, action[0]%3))
-		return EpisodicExperiment._oneInteraction(self)
+		self.stepid += 1
+        print "integrating observation"
+        print self.task.getObservation()
+        #self.agent
+        self.agent.integrateObservation(self.task.getObservation())
+        print "done integrating"
+        action = self.agent.getAction()
+
+		while not self.task.isLegal(self.task.env, (int(action[0])/3, action[0]%3)):
+			action = self.agent.getAction()
+
+
+		self.task.performAction(action)
+        reward = self.task.getReward()
+        self.agent.giveReward(reward)
+        return reward
+
 
 	do I redefine the method?
