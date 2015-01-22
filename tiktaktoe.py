@@ -71,17 +71,19 @@ class TikTacToe(Environment):
 			#print self.mypos
 			self.board[(newrow,newcol)] = 1 #us
 			self.empty.remove((newrow,newcol))
+			return True
 
 	def oppAction(self):
 		newopp_pos = self.opp.takeTurn(self)
 		if newopp_pos == False:
-			return
+			return False
 		self.opos.append(newopp_pos)
 		self.board[newopp_pos] = -1
 		#print self.empty
 		#print 'opp goes', newopp_pos
 		#print newopp_pos
 		self.empty.remove(newopp_pos)
+		return True
 
 	def gameOver(self):
 		#print "Who won?"

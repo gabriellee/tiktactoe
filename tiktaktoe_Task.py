@@ -5,7 +5,8 @@ import tiktaktoe_opponent
 from pybrain.rl.environments.episodic import EpisodicTask
 from tiktaktoe import TikTacToe
 from pybrain.utilities import  Named
-
+from tiktactoe_visualize import showBoard
+import pdb
 
 
 class TikTacToe_Task(EpisodicTask,Named):
@@ -29,10 +30,22 @@ class TikTacToe_Task(EpisodicTask,Named):
 		res = self.env.gameOver()
 		return res
 
-	def performAction(self, agent):
+	def performAction(self, action):
 		#print "actioning"
-		EpisodicTask.performAction(self, agent)
+		res = EpisodicTask.performAction(self, action)
+		#if not res:
+            #EpisodicTask.performAction(self, agent.getAction())
+		#showBoard(self.env.state_dict[self.getObservation()[0]])
+
+
+
 		self.env.oppAction()
+
+		#showBoard(self.env.state_dict[self.getObservation()[0]])
+
+	def isLegal(self, action):
+		return self.env.isLegal(self.env, (int(action[0])/3, action[0]%3))
+
 
 
 	def getObservation(self):

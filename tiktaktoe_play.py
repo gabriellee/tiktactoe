@@ -5,6 +5,7 @@ from pybrain.rl.agents import LearningAgent
 from pybrain.rl.learners import Q
 from pybrain.rl.experiments import EpisodicExperiment
 from pybrain.rl.environments import Task
+from tiktactoe_visualize import showBoard
 #from twoplayergame import TwoPlayerGame
 from tiktaktoe_Task import TikTacToe_Task
 from tiktaktoe import TikTacToe
@@ -33,11 +34,13 @@ agent = LearningAgent(avtable, learner)
 
 env = TikTacToe(3)
 task = TikTacToe_Task(env)
-experiment = EpisodicExperiment(task,agent)
+# experiment = EpisodicExperiment(task,agent)
+experiment = RestrictedExperiment(task,agent)
 
 performance = numpy.zeros(10000)
 
-
+#qstack = list()
+#qstack.append(0, 0, )
 
 #while True:
 for i in range(10000):
@@ -50,6 +53,14 @@ for i in range(10000):
 	#performance[i] = (experiment.task.env.winner)
 	#print avtable
 	agent.learn()
+	# does_occur = [12099.0 == st[0] for eq in self.dataset for st,av,rew in eq]
+	# if any(does_occur):
+	# 	pdb.set_trace()
+	# 	qstack.append()
+	# 	[self.module.getValue(12099, ac[0]) for eq in self.dataset for st, ac, rew in eq]
+
+
+	#if 
 	agent.reset()
 	
 	#print env.board[(0,0)], env.board[(0,1)], env.board[(0,2)]
@@ -65,11 +76,16 @@ for i in range(10000):
 plt.plot(env.state_freqs, 'x')
 #plt.plot(performance,'o')
 plt.show()
+pdb.set_trace()
 
-for i in range(10):
+for i in range(30):
 	ind1 = env.state_freqs.index(max(env.state_freqs))
 	board = env.state_dict[ind1]
+	print ind1
 	print board
+	#frozendict({(0, 1): 0, (1, 2): 0, (0, 0): -1, (2, 1): 1, (1, 1): 1, (2, 0): 0, (2, 2): 0, (1, 0): 0, (0, 2): -1})
+
+	showBoard(board)
 	print max(env.state_freqs)
 	env.state_freqs[ind1] = 0
 
