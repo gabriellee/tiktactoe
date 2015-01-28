@@ -44,7 +44,7 @@ class TikTacToe_Task(EpisodicTask,Named):
 		#showBoard(self.env.state_dict[self.getObservation()[0]])
 
 	def isLegal(self, action):
-		return self.env.isLegal(self.env, (int(action[0])/3, action[0]%3))
+		return self.env.isLegal((int(action[0])/3, action[0]%3))
 
 
 

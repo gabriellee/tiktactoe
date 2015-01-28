@@ -9,6 +9,7 @@ from tiktactoe_visualize import showBoard
 #from twoplayergame import TwoPlayerGame
 from tiktaktoe_Task import TikTacToe_Task
 from tiktaktoe import TikTacToe
+from restricted_experiment import RestrictedExperiment
 import pdb
 import numpy
 import matplotlib.pyplot as plt

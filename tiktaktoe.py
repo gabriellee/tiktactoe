@@ -49,7 +49,11 @@ class TikTacToe(Environment):
 			return False
 		if newpos[1] > self.dim:
 			return False
+		print "my position ", self.mypos
+		print "opos ", self.opos
+		print 'newpos ', newpos
 		if newpos in self.mypos or newpos in self.opos:
+			print "ILLEGAL"
 			return False
 		return True
 
