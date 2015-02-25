@@ -10,6 +10,9 @@ class RestrictedExperiment(EpisodicExperiment):
 
 	def _oneInteraction(self):
 		#check legality, by looking into environment, it can call right to is legal, bypassing performAction.  If it's not, get a new action, and repeat. THEN call to episdoic"
+        #self.agent
+
+
 		self.stepid += 1
 		print "integrating observation"
 		print self.task.getObservation()
@@ -17,7 +20,7 @@ class RestrictedExperiment(EpisodicExperiment):
 		self.agent.integrateObservation(self.task.getObservation())
 		print "done integrating"
 		action = self.agent.getAction()
-		showBoard(self.task.env.state_dict[self.task.getObservation()[0]])
+		#showBoard(self.task.env.state_dict[self.task.getObservation()[0]])
 
 		counter = 0
 		while not(self.task.isLegal(action)):

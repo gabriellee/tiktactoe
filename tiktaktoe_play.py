@@ -11,69 +11,68 @@ from tiktaktoe_Task import TikTacToe_Task
 from tiktaktoe import TikTacToe
 from restricted_experiment import RestrictedExperiment
 import pdb
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
 # import pylab
 # pylab.gray()
-# pylab.ion()
+plt.ion()
 
 
-# class TikTacToe_Player(Agent):
-# 	def __init__(self, game, mark = TikTacToe.X, **args):
-#         self.game = game
-#         self.mark = mark
-#         self.setArgs(**args)
 
+#DEFINE THE EXPERIMENT
 #there are 3^9 states
 #the action space has an upper bound of 9
 avtable = ActionValueTable(3**9, 9)#Ill need to tell it somewhere that not all states and actions are allowed
 avtable.initialize(0.)
-
-
 learner = Q()
 agent = LearningAgent(avtable, learner)
-
 env = TikTacToe(3)
 task = TikTacToe_Task(env)
 # experiment = EpisodicExperiment(task,agent)
 experiment = RestrictedExperiment(task,agent)
 
-performance = numpy.zeros(10000)
+#performance = np.zeros(10000)
+q_stack = [0 for i in range(9)]
 
-#qstack = list()
-#qstack.append(0, 0, )
+#show the board at the chosen state
+watch_state = 12099.0
+
 
 #while True:
-for i in range(10000):
-	#agent moves, wits for next player to move.  updates Q accordingly.  next move. OR
-	#agent moves, waits for other player to move. Repeats until end.  updates Q
-	#print 'Lets play!'
+for i in range(100):
 	experiment.doEpisodes(1)
-	#print agent._getLearning()
-	#print "and the winner is: ", experiment.task.env.winner
-	#performance[i] = (experiment.task.env.winner)
-	#print avtable
+ 	agent.history.addSample(agent.lastobs, agent.lastaction, 0)
+
 	agent.learn()
-	# does_occur = [12099.0 == st[0] for eq in self.dataset for st,av,rew in eq]
-	# if any(does_occur):
-	# 	pdb.set_trace()
-	# 	qstack.append()
-	# 	[self.module.getValue(12099, ac[0]) for eq in self.dataset for st, ac, rew in eq]
+	does_occur = [state_list[0] == watch_state for sequence in agent.learner.dataset for state_list,av,rew in sequence]
+	action_taken = [av for sequence in agent.learner.dataset for state_list,av,rew in sequence if state_list[0] == watch_state]
+
+	if any(does_occur):
+		#pdb.set_trace()
+		#generate a list of q values for each action taken
+		q_stack[int(action_taken[0][0])] = agent.learner.module.getValue(int(watch_state), int(action_taken[0]))
+		# if action_taken[0][0] == 1:
+		# 	pdb.set_trace()
+		#[self.module.getValue(12099, ac[0]) for sequence in self.dataset for state, action, reward in eq]
 
 
-	#if 
+
 	agent.reset()
+
+#map q_stack to the board
+q_table = np.flipud(np.array(q_stack).reshape(3,3).transpose())
+
+plt.pcolor(q_table)
+plt.draw()
+plt.show()
 	
-	#print env.board[(0,0)], env.board[(0,1)], env.board[(0,2)]
-	#print env.board[(1,0)], env.board[(1,1)], env.board[(1,2)]
-	#print env.board[(2,0)], env.board[(2,1)], env.board[(2,2)]
-	#if agent.controller == avtable:
-	#	print "i learned"
-	#reset clears out the agents last observations and action log
-	#pylab.pcolor(avtable.params.max(1))
-	#pylab.draw()
+
 
 #pdb.set_trace()
+print q_stack
+showBoard(env.state_dict[np.array([watch_state])[0]])
+
+
 plt.plot(env.state_freqs, 'x')
 #plt.plot(performance,'o')
 plt.show()
