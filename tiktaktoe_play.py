@@ -37,9 +37,10 @@ q_stack = [0 for i in range(9)]
 #show the board at the chosen state
 watch_state = 12099.0
 
-
+winloss_record =list()
+learning_curve = list()
 #while True:
-for i in range(100):
+for i in range(1000):
 	experiment.doEpisodes(1)
  	agent.history.addSample(agent.lastobs, agent.lastaction, 0)
 
@@ -55,28 +56,33 @@ for i in range(100):
 		# 	pdb.set_trace()
 		#[self.module.getValue(12099, ac[0]) for sequence in self.dataset for state, action, reward in eq]
 
-
+	#pdb.set_trace()
+	winloss_record.append(env.winner)
+	av_intvl = 10
+	if len(winloss_record)%av_intvl == 0:
+		learning_curve.append(np.mean(winloss_record[-av_intvl:]))
 
 	agent.reset()
 
 #map q_stack to the board
 q_table = np.flipud(np.array(q_stack).reshape(3,3).transpose())
 
-plt.pcolor(q_table)
-plt.draw()
+plt.plot(learning_curve)
+#plt.pcolor(q_table)
+#plt.draw()
 plt.show()
 	
 
 
 #pdb.set_trace()
 print q_stack
-showBoard(env.state_dict[np.array([watch_state])[0]])
+#showBoard(env.state_dict[np.array([watch_state])[0]])
 
 
-plt.plot(env.state_freqs, 'x')
+#plt.plot(env.state_freqs, 'x')
 #plt.plot(performance,'o')
-plt.show()
-pdb.set_trace()
+#plt.show()
+#pdb.set_trace()
 
 for i in range(30):
 	ind1 = env.state_freqs.index(max(env.state_freqs))
@@ -85,7 +91,7 @@ for i in range(30):
 	print board
 	#frozendict({(0, 1): 0, (1, 2): 0, (0, 0): -1, (2, 1): 1, (1, 1): 1, (2, 0): 0, (2, 2): 0, (1, 0): 0, (0, 2): -1})
 
-	showBoard(board)
+	#showBoard(board)
 	print max(env.state_freqs)
 	env.state_freqs[ind1] = 0
 
