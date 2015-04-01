@@ -1,8 +1,7 @@
 
 #from pybrain.rl.environments.twoplayergames import TwoPlayerGame
-from pybrain.rl.learners.valuebased import ActionValueTable
 from pybrain.rl.agents import LearningAgent
-from pybrain.rl.learners import Q
+from pybrain.rl.learners import NFQ, ActionValueNetwork
 from pybrain.rl.experiments import EpisodicExperiment
 from pybrain.rl.environments import Task
 from tiktactoe_visualize import showBoard
@@ -22,10 +21,10 @@ plt.ion()
 #DEFINE THE EXPERIMENT
 #there are 3^9 states
 #the action space has an upper bound of 9
-avtable = ActionValueTable(3**9, 9)#Ill need to tell it somewhere that not all states and actions are allowed
-avtable.initialize(0.)
-learner = Q()
-agent = LearningAgent(avtable, learner)
+avnet = ActionValueNetwork(3,9)#Ill need to tell it somewhere that not all states and actions are allowed
+#vnet.initialize(0.)
+learner = NFQ()
+agent = LearningAgent(avnet, learner)
 env = TikTacToe(3)
 task = TikTacToe_Task(env)
 # experiment = EpisodicExperiment(task,agent)

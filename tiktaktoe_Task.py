@@ -50,7 +50,7 @@ class TikTacToe_Task(EpisodicTask,Named):
 
 	def getObservation(self):
 		sensors = self.env.getSensors()
-		self.env.state_freqs[sensors] +=1
+		#self.env.state_freqs[sensors] +=1
 		return sensors
 
 	def  getReward(self):

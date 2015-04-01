@@ -39,10 +39,50 @@ class TikTacToe(Environment):
 	def getSensors(self):
 		"""what is visible of the environment to the agent"""
 		#pdb.set_trace()
-		x = map(lambda x: x[1], sorted(self.board.items()))
-		state_num = sum([(x[i]+1)*3**i for i in range(len(x))])
-		self.state_dict[state_num] = frozendict(self.board)
-		return array([state_num])
+		# x = map(lambda x: x[1], sorted(self.board.items()))
+		# state_num = sum([(x[i]+1)*3**i for i in range(len(x))])
+		# self.state_dict[state_num] = frozendict(self.board)
+
+		feat1 = 0; feat2 = 0; feat3 = 0;
+		# #feature 1: is the opponent about to win?
+		# pdb.set_trace()
+		for opos in self.opos:
+			ytest_vec = [0,1,2]
+			ytest_vec.remove(opos[0])
+			xtest_vec = [0,1,2]
+			xtest_vec.remove(opos[1])
+		# 	#check row, col, and maybe diag
+			if (((opos[0],xtest_vec[0]) in opos) or (((opos[0],xtest_vec[1]) in opos)) and (((opos[0],xtest_vec[0]) in self.empty) or (opos[0],xtest_vec[1]) in self.empty)):
+				feat1 = 1;
+				break
+			elif (((ytest_vec[0],opos[1]) in opos) or (((ytest_vec[1],opos[1]) in opos)) and (((ytest_vec[0],opos[1]) in self.empty) or (ytest_vec[1],opos[1]) in self.empty)):
+				feat1 = 1;
+				break
+		#pdb.set_trace()
+		if sum([self.board[(0,0)],self.board[(1,1)],self.board[(2,2)]])==-2 or sum([self.board[(0,2)],self.board[(1,1)],self.board[(2,0)]])==-2:
+			feat1 = 1;
+		#feature 2: could I win?  1=yes, 0=no
+		for mypos in self.mypos:
+			ytest_vec = [0,1,2]
+			ytest_vec.remove(opos[0])
+			xtest_vec = [0,1,2]
+			xtest_vec.remove(opos[1])
+		# 	#check row, col, and maybe diag
+			#print (((mypos[0],xtest_vec[0]) in mypos) or (((mypos[0],xtest_vec[1]) in mypos)) and (((mypos[0],xtest_vec[0]) in self.empty) or (mypos[0],xtest_vec[1]) in self.empty))
+			print mypos
+			if (((mypos[0],xtest_vec[0]) in self.mypos) or (((mypos[0],xtest_vec[1]) in self.mypos)) and (((mypos[0],xtest_vec[0]) in self.empty) or (mypos[0],xtest_vec[1]) in self.empty)):
+				feat2 = 1;
+				break
+			elif (((ytest_vec[0],mypos[1]) in self.mypos) or (((ytest_vec[1],mypos[1]) in self.mypos)) and (((ytest_vec[0],mypos[1]) in self.empty) or (ytest_vec[1],mypos[1]) in self.empty)):
+				feat2 = 1;
+				break
+		if sum([self.board[(0,0)],self.board[(1,1)],self.board[(2,2)]])==2 or sum([self.board[(0,2)],self.board[(1,1)],self.board[(2,0)]])==2:
+			feat2 = 1;
+		#feature three: are there corners open?
+		if ((0,0) in self.empty) or ((2,2) in self.empty) or ((0,2) in self.empty) or ((2,0) in self.empty):
+			feat3 = 1;
+		return array([feat1,feat2,feat3])
+		#return array([state_num])
 
 	def isLegal(self,newpos):
 		if newpos[0] > self.dim:
