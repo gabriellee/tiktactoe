@@ -21,8 +21,7 @@ plt.ion()
 #DEFINE THE EXPERIMENT
 #there are 3^9 states
 #the action space has an upper bound of 9
-avnet = ActionValueNetwork(3,9)#Ill need to tell it somewhere that not all states and actions are allowed
-#vnet.initialize(0.)
+avnet = ActionValueNetwork(10,9)#Ill need to tell it somewhere that not all states and actions are allowed
 learner = NFQ()
 agent = LearningAgent(avnet, learner)
 env = TikTacToe(3)

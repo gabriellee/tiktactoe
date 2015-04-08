@@ -43,45 +43,70 @@ class TikTacToe(Environment):
 		# state_num = sum([(x[i]+1)*3**i for i in range(len(x))])
 		# self.state_dict[state_num] = frozendict(self.board)
 
-		feat1 = 0; feat2 = 0; feat3 = 0;
-		# #feature 1: is the opponent about to win?
+		#feature space: is the opponent about to win?
+		#one feature for each space that the opponent might win by, plus a bias term
+		self.board = {(key1,key2):0 for key1 in [0,1,2] for key2 in [0,1,2]}
 		# pdb.set_trace()
+		#create dictionary of feature to positions, then turn it into a list
+		feat_dict = {(key1,key2):0 for key1 in [0,1,2] for key2 in [0,1,2]};
 		for opos in self.opos:
 			ytest_vec = [0,1,2]
 			ytest_vec.remove(opos[0])
 			xtest_vec = [0,1,2]
 			xtest_vec.remove(opos[1])
-		# 	#check row, col, and maybe diag
-			if (((opos[0],xtest_vec[0]) in opos) or (((opos[0],xtest_vec[1]) in opos)) and (((opos[0],xtest_vec[0]) in self.empty) or (opos[0],xtest_vec[1]) in self.empty)):
-				feat1 = 1;
-				break
-			elif (((ytest_vec[0],opos[1]) in opos) or (((ytest_vec[1],opos[1]) in opos)) and (((ytest_vec[0],opos[1]) in self.empty) or (ytest_vec[1],opos[1]) in self.empty)):
-				feat1 = 1;
-				break
+		 	#check row, and col
+			if ((opos[0],xtest_vec[0]) in opos) or ((opos[0],xtest_vec[1]) in opos):
+				if ((opos[0],xtest_vec[0]) in self.empty):
+					feat_dict[(opos[0],xtest_vec[0])] = 1;
+				elif (opos[0],xtest_vec[1]) in self.empty:
+					feat_dict[(opos[0],xtest_vec[1])] = 1;
+
+			if (((ytest_vec[0],opos[1]) in opos) or ((ytest_vec[1],opos[1]) in opos)):
+				if ((ytest_vec[0],opos[1]) in self.empty):
+					feat_dict[(ytest_vec[0],opos[1])] = 1;
+				elif (ytest_vec[1],opos[1]) in self.empty:
+					feat_dict[(ytest_vec[0],opos[1])] = 1;
+
 		#pdb.set_trace()
-		if sum([self.board[(0,0)],self.board[(1,1)],self.board[(2,2)]])==-2 or sum([self.board[(0,2)],self.board[(1,1)],self.board[(2,0)]])==-2:
-			feat1 = 1;
+		if sum([self.board[(0,0)],self.board[(1,1)],self.board[(2,2)]])==-2:
+			for key in [(0,0),(1,1),(2,2)]:
+				if key in self.empty:
+					feat_dict[key] = 1
+					break
+		if sum([self.board[(0,2)],self.board[(1,1)],self.board[(2,0)]])==-2:
+			for key in [(0,2),(1,1),(2,0)]:
+				if key in self.empty:
+					feat_dict[key] = 1
+					break
+
 		#feature 2: could I win?  1=yes, 0=no
-		for mypos in self.mypos:
-			ytest_vec = [0,1,2]
-			ytest_vec.remove(opos[0])
-			xtest_vec = [0,1,2]
-			xtest_vec.remove(opos[1])
-		# 	#check row, col, and maybe diag
-			#print (((mypos[0],xtest_vec[0]) in mypos) or (((mypos[0],xtest_vec[1]) in mypos)) and (((mypos[0],xtest_vec[0]) in self.empty) or (mypos[0],xtest_vec[1]) in self.empty))
-			print mypos
-			if (((mypos[0],xtest_vec[0]) in self.mypos) or (((mypos[0],xtest_vec[1]) in self.mypos)) and (((mypos[0],xtest_vec[0]) in self.empty) or (mypos[0],xtest_vec[1]) in self.empty)):
-				feat2 = 1;
-				break
-			elif (((ytest_vec[0],mypos[1]) in self.mypos) or (((ytest_vec[1],mypos[1]) in self.mypos)) and (((ytest_vec[0],mypos[1]) in self.empty) or (ytest_vec[1],mypos[1]) in self.empty)):
-				feat2 = 1;
-				break
-		if sum([self.board[(0,0)],self.board[(1,1)],self.board[(2,2)]])==2 or sum([self.board[(0,2)],self.board[(1,1)],self.board[(2,0)]])==2:
-			feat2 = 1;
-		#feature three: are there corners open?
-		if ((0,0) in self.empty) or ((2,2) in self.empty) or ((0,2) in self.empty) or ((2,0) in self.empty):
-			feat3 = 1;
-		return array([feat1,feat2,feat3])
+		# for mypos in self.mypos:
+		# 	ytest_vec = [0,1,2]
+		# 	ytest_vec.remove(opos[0])
+		# 	xtest_vec = [0,1,2]
+		# 	xtest_vec.remove(opos[1])
+		# # 	#check row, col, and maybe diag
+		# 	#print (((mypos[0],xtest_vec[0]) in mypos) or (((mypos[0],xtest_vec[1]) in mypos)) and (((mypos[0],xtest_vec[0]) in self.empty) or (mypos[0],xtest_vec[1]) in self.empty))
+		# 	print mypos
+		# 	if (((mypos[0],xtest_vec[0]) in self.mypos) or (((mypos[0],xtest_vec[1]) in self.mypos)) and (((mypos[0],xtest_vec[0]) in self.empty) or (mypos[0],xtest_vec[1]) in self.empty)):
+		# 		feat2 = 1;
+		# 		break
+		# 	elif (((ytest_vec[0],mypos[1]) in self.mypos) or (((ytest_vec[1],mypos[1]) in self.mypos)) and (((ytest_vec[0],mypos[1]) in self.empty) or (ytest_vec[1],mypos[1]) in self.empty)):
+		# 		feat2 = 1;
+		# 		break
+		# if sum([self.board[(0,0)],self.board[(1,1)],self.board[(2,2)]])==2 or sum([self.board[(0,2)],self.board[(1,1)],self.board[(2,0)]])==2:
+		# 	feat2 = 1;
+		# #feature three: are there corners open?
+		# if ((0,0) in self.empty) or ((2,2) in self.empty) or ((0,2) in self.empty) or ((2,0) in self.empty):
+		# 	feat3 = 1;
+
+		#flatten the dictionary
+		#add a bias term
+		feat_list = [feat_dict[key] for key in sorted(feat_dict)]
+		feat_list.append(1)
+		print array(feat_list)
+		print len(array(feat_list))
+		return array(feat_list)
 		#return array([state_num])
 
 	def isLegal(self,newpos):
