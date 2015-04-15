@@ -23,6 +23,8 @@ plt.ion()
 #the action space has an upper bound of 9
 avnet = ActionValueNetwork(10,9)#Ill need to tell it somewhere that not all states and actions are allowed
 learner = NFQ()
+learner.explorer.epsilon = 1
+learner.explorer.decay = 0.999999999999999
 agent = LearningAgent(avnet, learner)
 env = TikTacToe(3)
 task = TikTacToe_Task(env)

@@ -23,14 +23,20 @@ class RestrictedExperiment(EpisodicExperiment):
 		#showBoard(self.task.env.state_dict[self.task.getObservation()[0]])
 
 		counter = 0
+		tally = 0
 		while not(self.task.isLegal(action)):
+			tally+=1
 			#clear last action
 			self.agent.lastaction = None#is this right?
-			action = self.agent.getAction()
+			if len(self.task.env.empty):
+				action = [self.task.env.empty[0][0]*3 + self.task.env.empty[0][1]]
+				self.agent.lastaction = action
+			else:
+				action = self.agent.getAction()
 			print action
 			print int(action[0])/3, action[0]%3
-			# if counter == 4:
-			# 	pdb.set_trace()
+			if tally == 40:
+			 	pdb.set_trace()
 
 		print "selected action is ", action
 		self.task.performAction(action)
