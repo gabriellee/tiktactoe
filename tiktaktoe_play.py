@@ -54,7 +54,7 @@ for i in range(1000):
 		#pdb.set_trace()
 		#pdb.set_trace()
 		#generate a list of q values for each action taken
-		q_stack[int(action_taken[0][0])] = agent.learner.module.getValue(int(watch_state), int(action_taken[0][0]))
+		q_stack[int(action_taken[0][0])] = agent.learner.module.getValue(watch_state, int(action_taken[0][0]))
 		# if action_taken[0][0] == 1:
 		# 	pdb.set_trace()
 		#[self.module.getValue(12099, ac[0]) for sequence in self.dataset for state, action, reward in eq]
