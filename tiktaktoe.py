@@ -45,7 +45,7 @@ class TikTacToe(Environment):
 
 		#feature space: is the opponent about to win?
 		#one feature for each space that the opponent might win by, plus a bias term
-		self.board = {(key1,key2):0 for key1 in [0,1,2] for key2 in [0,1,2]}
+		#self.board = {(key1,key2):0 for key1 in [0,1,2] for key2 in [0,1,2]}
 		# pdb.set_trace()
 		#create dictionary of feature to positions, then turn it into a list
 		feat_dict = {(key1,key2):0 for key1 in [0,1,2] for key2 in [0,1,2]};
@@ -54,14 +54,18 @@ class TikTacToe(Environment):
 			ytest_vec.remove(opos[0])
 			xtest_vec = [0,1,2]
 			xtest_vec.remove(opos[1])
+			#for each opponent position, check whether one of the other 2 spots in the row and then column are taken
+
 		 	#check row, and col
-			if ((opos[0],xtest_vec[0]) in opos) or ((opos[0],xtest_vec[1]) in opos):
+			if ((opos[0],xtest_vec[0]) in self.opos) or ((opos[0],xtest_vec[1]) in self.opos):
+				#pdb.set_trace()
 				if ((opos[0],xtest_vec[0]) in self.empty):
 					feat_dict[(opos[0],xtest_vec[0])] = 1;
 				elif (opos[0],xtest_vec[1]) in self.empty:
 					feat_dict[(opos[0],xtest_vec[1])] = 1;
 
-			if (((ytest_vec[0],opos[1]) in opos) or ((ytest_vec[1],opos[1]) in opos)):
+			if (((ytest_vec[0],opos[1]) in self.opos) or ((ytest_vec[1],opos[1]) in self.opos)):
+				#pdb.set_trace()
 				if ((ytest_vec[0],opos[1]) in self.empty):
 					feat_dict[(ytest_vec[0],opos[1])] = 1;
 				elif (ytest_vec[1],opos[1]) in self.empty:
