@@ -20,7 +20,8 @@ plt.ion()
 
 #DEFINE THE EXPERIMENT
 #there are 3^9 states
-#the action space has an upper bound of 9
+##the action space has an upper bound of 9
+#pdb.set_trace()
 avnet = ActionValueNetwork(10,9)#Ill need to tell it somewhere that not all states and actions are allowed
 learner = NFQ()
 learner.explorer.epsilon = .5
@@ -40,7 +41,7 @@ watch_state = np.array([0, 1, 0, 0, 0, 0, 0, 0, 0, 1])
 winloss_record =list()
 learning_curve = list()
 #while True:
-for i in range(1000):
+for i in range(3000):
 	experiment.doEpisodes(1)
  	agent.history.addSample(agent.lastobs, agent.lastaction, 0)
 
