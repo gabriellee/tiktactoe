@@ -47,5 +47,5 @@ class TikTacToeOpponent(object):
 				#print spot
 				return spot
 				feat_dict = {(key1,key2):0 for key1 in [0,1,2] for key2 in [0,1,2]};
-			return False
+		return False
 
